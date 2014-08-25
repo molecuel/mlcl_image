@@ -1,11 +1,11 @@
 {
   "name": "mlcl_image",
-  "version": "0.1.1",
+  "version": "0.0.1",
   "dependencies": {
     "underscore": ">=0.0.1",
     "sharp": ">=0.6.0"
   },
-  "description": "Image module for the molecuel CMS",
+  "description": "Image manipulation/rendering module for the mlcl CMS",
   "main": "index.js",
   "repository": {
     "type": "git",
