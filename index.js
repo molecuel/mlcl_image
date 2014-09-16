@@ -218,8 +218,10 @@ image.prototype.process = function process(source, style, callback) {
     if(prop.resize) {
       obj = obj.resize(prop.resize.width, prop.resize.height);
     }
+    if(prop.max) {
+      obj = obj.max();
+    }
     if(prop.embedWhite) {
-      console.log("embedWhite");
       obj = obj.embedWhite();
     }
   });
