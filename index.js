@@ -92,25 +92,52 @@ image.prototype.get = function get(req, res, next) {
     }
   }
 
-  self.loadByUrl(url, function(err, result) {
+  self.elements.searchByUrl(url, "", function(err, result) {
     if(err) {
-      return res.send(404, err);
+      return callback(err);
     }
-    if(result) {
-      self.process(result, style, function(err, result, metadata) {
-        if(err) {
-          return res.send(500, err);
-        }
-        if(result) {
-          res.type(metadata.format);
-          return res.send(result);
-        }
-      });
+    if (result && result.hits && result.hits.hits && result.hits.hits[0]) {
+      var object = result.hits.hits[0];
+      var source = result.hits.hits[0]._source;
+      var type = result.hits.hits[0]._type;
+
+      if(object && type == 'file') {
+        var grid = self.files.grid;
+        grid.getFileStream(object._id, function(err, filestream) {
+          if(!filestream) {
+              return res.send(500);
+          } else {
+            self.process(style, function(err, transform) {
+              filestream.pipe(transform).pipe(res);
+            });
+          }
+        });
+      } else {
+        return res.send(500);
+      }
     }
   });
-
 };
 
+image.prototype.metadata = function metadata(options, callback) {
+  var self = this;
+  var obj;
+  if(_.isString(options)) {
+    self.loadByUrl(options, function(err, buffer) {
+      if(err) {
+        return callback(err);
+      }
+      if(buffer) {
+        sharp(buffer).metadata(function(err, meta) {
+          if(err) {
+            return callback(err);
+          }
+          return callback(null, meta);
+        });
+      }
+    })
+  }
+}
 
 /**
  * loadByUrl - Gets an image as buffer object based on its url
@@ -211,8 +238,8 @@ image.prototype.getStyle = function getStyle(name) {
  * @param  {type} style    configuration object
  * @param  {type} callback callback(err, OutputBuffer, metadata)
  */
-image.prototype.process = function process(source, style, callback) {
-  var obj = sharp(source);
+image.prototype.process = function process(style, callback) {
+  var obj = sharp();
 
   _.each(style.transformations, function(prop) {
     if(prop.resize) {
@@ -232,16 +259,7 @@ image.prototype.process = function process(source, style, callback) {
       obj = obj.jpeg();
     }
   }
-
-  obj.toBuffer(function(err, buffer, info) {
-    if(err) {
-      return callback(err);
-    }
-    sharp(buffer).metadata(function(err, metadata) {
-      return callback(null, buffer, metadata);
-    });
-
-  });
+  callback(null, obj);
 }
 
 /* ************************************************************************
