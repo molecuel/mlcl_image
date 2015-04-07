@@ -1,6 +1,6 @@
 {
   "name": "mlcl_image",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "dependencies": {
     "underscore": ">=0.0.1",
     "sharp": "0.7.2"

@@ -108,6 +108,7 @@ image.prototype.get = function get(req, res, next) {
               return res.send(500);
           } else {
             self.process(style, function(err, transform) {
+              res.set('Cache-Control', 'no-transform,public,max-age=900');
               filestream.pipe(transform).pipe(res);
             });
           }
