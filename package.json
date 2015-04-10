@@ -1,9 +1,9 @@
 {
   "name": "mlcl_image",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "dependencies": {
     "underscore": ">=0.0.1",
-    "sharp": ">=0.0.1"
+    "sharp": "0.7.2"
   },
   "description": "Image manipulation/rendering module for the mlcl CMS",
   "main": "index.js",
