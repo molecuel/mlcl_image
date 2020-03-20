@@ -3,7 +3,7 @@
   "version": "0.0.9",
   "dependencies": {
     "underscore": ">=0.0.1",
-    "sharp": ">=0.0.1"
+    "sharp": ">=0.25.2"
   },
   "description": "Image manipulation/rendering module for the mlcl CMS",
   "main": "index.js",
